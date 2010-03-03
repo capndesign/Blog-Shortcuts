@@ -1,6 +1,6 @@
 # Blog Shortcuts
 
-Author: Matt Jacobs
+Author: Matt Jacobs  
 License: TBD
 
 ## Overview
