@@ -23,7 +23,7 @@ Currently, you'll need to modify the jQuery selectors to match the elements used
 These are the shortcuts that are included. Keep in mind, they are case-sensitive
 
 * Scroll to the next entry: n or j
-* Scroll to the previous entry: o or k
+* Scroll to the previous entry: p or k
 * Load the newer entry on permalink: J or N
 * Load the older entry on permalink: K or P
 * Go to the homepage: H

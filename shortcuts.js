@@ -28,7 +28,7 @@ $(document).ready(function(){
 				activeUrl = $($('.article').get(keyIndex)).children().children('a.permalink').attr('href');
 			}
 
-			// Scroll to the previous entry: o or k
+			// Scroll to the previous entry: p or k
 			if ((event.charCode == '107' || event.charCode == '112') && !$('body.entry').html()) {
 
 				keyIndex--;
