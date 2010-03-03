@@ -15,7 +15,7 @@ $(document).ready(function(){
 	$('html').keypress(function(event){
 		
 		// Prevent keypresses from interupting form submissions
-		if (document.activeElement.localName != 'input' && document.activeElement.localName != 'textarea') {
+		if (document.activeElement.localName.toLowerCase() != 'input' && document.activeElement.localName.toLowerCase() != 'textarea') {
 			keyPresses++;
 
 			// Scroll to the next entry: n or j
