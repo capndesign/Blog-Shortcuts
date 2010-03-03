@@ -35,3 +35,11 @@ These are the shortcuts that are included. Keep in mind, they are case-sensitive
 ## See it in action
 
 Right now, the only place it's in use is on my blog. You can see it at [capndesign.com](http://capndesign.com).
+
+## TODO
+
+* Set jQuery selectors via variables
+* Set keyboard commands via variables
+* Allow character labels instead of character codes
+* Figure out open-source license
+* Get people to help optimize the JS; it needs work
