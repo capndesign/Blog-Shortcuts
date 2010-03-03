@@ -33,6 +33,7 @@ These are the shortcuts that are included. Keep in mind, they are case-sensitive
 * Focus on search: s
 * Go to top: t
 * Show the tag input window: g+t
+* See all available shortcuts: ?
 
 ## See it in action
 
