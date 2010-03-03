@@ -10,7 +10,9 @@ Blog Shortcuts will provide visitors of your blog the ability to navigate your s
 ## Requirements
 
 * jQuery 1.32 or higher
+* Safari 4.x, Firefox 3.6.x or Chrome 4.x
 * A blog
+
 
 ## Usage
 
@@ -42,4 +44,5 @@ Right now, the only place it's in use is on my blog. You can see it at [capndesi
 * Set keyboard commands via variables
 * Allow character labels instead of character codes
 * Figure out open-source license
-* Get people to help optimize the JS; it needs work
+* Test in IE 7/8, then make it work there
+* Get people to help optimize the JS; it could be better
