@@ -3,9 +3,18 @@
 * They will eventually be open sourced, once I figure that out.
 */
 
+/***** Configurable *****/
+
+/* Selector for Blog Post */
+
+var blogPostSelector = '.article';
+
+
+/***** Not so Configurable *****/
+
 var keyIndex = 0;
 var keyPresses = 0;
-var items = $('.article').length;
+var items = $(blogPostSelector).length;
 var lastCode = '';
 var activeUrl = '';
 var clearT = false;
@@ -19,13 +28,13 @@ $(document).ready(function(){
 			keyPresses++;
 
 			// Scroll to the next entry: n or j
-			if ((event.charCode == '106' || event.charCode == '110') && !$('body.entry').html()) { 
+			if ((event.charCode == '106' || event.charCode == '110') && !$(blogPostSelector).html()) { 
 				keyIndex++;
 				if (keyIndex < 0 || keyPresses == 1) keyIndex = 0;
 				if (keyIndex >= items) keyIndex = items - 1;
-				var articlePos = $($('.article').get(keyIndex)).offset();
+				var articlePos = $($(blogPostSelector).get(keyIndex)).offset();
 				$(window).scrollTop(articlePos.top -10);
-				activeUrl = $($('.article').get(keyIndex)).children().children('a.permalink').attr('href');
+				activeUrl = $($(blogPostSelector).get(keyIndex)).children().children('a.permalink').attr('href');
 			}
 
 			// Scroll to the previous entry: p or k
@@ -34,9 +43,9 @@ $(document).ready(function(){
 				keyIndex--;
 				if (keyIndex < 0 || keyPresses == 1) keyIndex = 0;
 				if (keyIndex >= items) keyIndex = items - 1;
-				var articlePos = $($('.article').get(keyIndex)).offset();
+				var articlePos = $($(blogPostSelector).get(keyIndex)).offset();
 				$(window).scrollTop(articlePos.top -10);
-				activeUrl = $($('.article').get(keyIndex)).children().children('a.permalink').attr('href');
+				activeUrl = $($(blogPostSelector).get(keyIndex)).children().children('a.permalink').attr('href');
 			}
 
 			// Go to Entry
