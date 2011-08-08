@@ -1,6 +1,7 @@
 /* These styles are for the tag and help overlays. */
 
 .shortcut-display {
+	font-size: 1em;
 	padding: 10px;
 	background: #eee;
 	position: fixed;
