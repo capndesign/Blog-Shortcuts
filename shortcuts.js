@@ -1,18 +1,24 @@
 /* 
-* Blog Shortcuts are developed by Matt Jacobs
-* This will eventually be open sourced, once I figure that out.
+	Blog Shortcuts are developed by Matt Jacobs
+	This will eventually be open sourced, once I figure that out.
 */
 
-/***** Please leave these fellows be. *****/
+/* Please leave these fellows be (aka futz at your own risk). */
 
 var keyIndex = 0;
 var keyPresses = 0;
 var bsItems, lastCode, activeUrl;
+var clickCleared = false;
 var clearT = false;
-
-/***** Configure me, please. *****/
-
 var bsOptions = {};
+
+/*
+	Configure me, please.
+	All of the shortcuts already have keys and other variables set,
+	but you'll have a lot more fun if you make it your own.
+	
+	A note: Don't use 'g'. I've reserved that for go-to commands.
+*/
 
 // Provide the CSS selector that is unique to your blog posts.
 bsOptions.blogPostSelector = '.article';
@@ -21,11 +27,10 @@ bsOptions.blogPostSelector = '.article';
 bsOptions.nextPost = 'j';
 bsOptions.prevPost = 'k';
 
-// The key used to go to the permalink for the actively selected 
+// The key used to go to the permalink for the actively selected
+// The permalink URL is configured in the code below. Mine was convoluted
+// and I couldn't figure out a good way to bring it up here.
 bsOptions.goToPost = 'enter';
-
-// Selector for your active URL
-bsOptions.activeUrl = $($(bsOptions.blogPostSelector).get(keyIndex)).children().children('a.permalink').attr('href');
 
 // Keys for next and previous posts when on permalink pages
 bsOptions.nextPermalink = 'n';
@@ -36,6 +41,9 @@ bsOptions.goToHomepage = 'h';
 
 // The URL of your homepage
 bsOptions.homepageUrl = '/';
+
+// Key to go to the top of the page
+bsOptions.goToTop = 't';
 
 // Key to go to your archives
 bsOptions.goToArchives = 'r';
@@ -55,12 +63,19 @@ bsOptions.searchSelector = '#search';
 // Key to focus on search
 bsOptions.focusSearch = 's';
 
+// Enable go-to-tag box.
+// I haven't generalized key sequences, so this is hard coded to g+t for now.
+bsOptions.showTagBox = true;
+
 // Show help box
+// Note: I've defaulted to the question mark, which is problematic in Firefox.
 bsOptions.help = '?';
 
 
-/* I borrowed these key codes from jKey
-More infomation on http://oscargodson.com/labs/jkey */
+/*
+I borrowed these key codes from jKey
+More infomation is available at http://oscargodson.com/labs/jkey
+*/
 
 var keyCodes = { 
 	/* start the a-z keys */
@@ -70,7 +85,7 @@ var keyCodes = {
 	'd' : 68,
 	'e' : 69,
 	'f' : 70,
-	'g' : 71,
+	// 'g' : 71, *I've reserved g for go-to commands*
 	'h' : 72,
 	'i' : 73,
 	'j' : 74,
@@ -212,7 +227,7 @@ $(document).ready(function(){
 
 			// Go to Entry
 			if (event.keyCode == keyCodes[bsOptions.goToPost] && activeUrl != '') {
-				window.location = activeUrl
+				window.location = activeUrl;
 			}
 
 			// Load the newer entry on permalink
@@ -225,62 +240,92 @@ $(document).ready(function(){
 			}
 
 			// Go to the homepage
-			if (event.keyCode == keyCodes[bsOptions.goToHomepage]) {
+			if (bsOptions.homepageUrl && event.keyCode == keyCodes[bsOptions.goToHomepage]) {
 				window.location = bsOptions.homepageUrl;
 			}
 
 			// Go to archives
-			if (event.keyCode == keyCodes[bsOptions.goToArchives]) {
+			if (bsOptions.archivesUrl && event.keyCode == keyCodes[bsOptions.goToArchives]) {
 				window.location = bsOptions.archivesUrl;
 			}
 
 			// Go to about
-			if (event.keyCode == keyCodes[bsOptions.goToAbout]) {
+			if (bsOptions.homepageUrl && event.keyCode == keyCodes[bsOptions.goToAbout]) {
 				window.location = bsOptions.aboutUrl;
 			}
-			// Focus on search: s
-			if (event.keyCode == keyCodes[bsOptions.focusSearch]) {
+			// Focus on search
+			if (bsOptions.searchSelector && event.keyCode == keyCodes[bsOptions.focusSearch]) {
 				$(bsOptions.searchSelector).focus();
 			}
 		
-			if (event.keyCode == '84') {
-				if (lastCode == '71') {
-					// Show the tag input window: g+t
+			// Show the tag input window: g+t
+			if (bsOptions.showTagBox && event.keyCode == '84' && lastCode == '71') {
 
-					$('body').append('<div id="goto-tag" class="shortcut-display"><form><label for="tag-input">Enter Tag: </label><input type="text" name="tag-input" id="tag-input" /></form></div>');
-					$('#tag-input').focus();
-				
-					clickClear();
-				
-					clearT = true;
-				
-				} else {
-					// Go to top: t
-
-					$(window).scrollTop(0);
-				}
+				$('body').append('<div id="goto-tag" class="shortcut-display"><form><label for="tag-input">Enter Tag: </label><input type="text" name="tag-input" id="tag-input" /></form></div>');
+				$('#tag-input').focus();
+			
+				clickClear();
+				clearT = true;
+			}
+			
+			// Go to top (we have to check that g wasn't pressed first while this is still hard coded)
+			if (event.keyCode == keyCodes[bsOptions.goToTop] && lastCode != '71') {
+				$(window).scrollTop(0);
 			}
 		
 			if (event.keyCode == keyCodes[bsOptions.help]) {
-				$('body').append('<div id="shortcut-help" class="shortcut-display"><h3>Keyboard Shortcuts!</h3><ul><li>Scroll to the next entry: n or j</li> <li>Scroll to the previous entry: o or k</li> <li>Load the newer entry on permalink: J or N</li> <li>Load the older entry on permalink: K or P</li> <li>Go to the homepage: H</li> <li>Go to reviews: r</li> <li>Go to archives: A</li> <li>Go to about: a</li> <li>Focus on search: s</li> <li>Go to top: t</li> <li>Show the tag input window: g+t</li></ul></div>');
-			
+				bsHelp = $('<div id="shortcut-help" class="shortcut-display"><h3>Keyboard Shortcuts!</h3><ul></ul></div>');
+				
+				if (bsOptions.nextPost) bsHelp.append('<li>Scroll to the next post: ' + bsOptions.nextPost + '</li>');
+				if (bsOptions.prevPost) bsHelp.append('<li>Scroll to the previous post: ' + bsOptions.prevPost + '</li>');
+				if (bsOptions.goToPost) bsHelp.append('<li>Load highlighted post: ' + bsOptions.goToPost + '</li>');
+				if (bsOptions.nextPermalink) bsHelp.append('<li>On permalink, load newer post: ' + bsOptions.nextPermalink + '</li>');
+				if (bsOptions.prevPermalink) bsHelp.append('<li>On permalink, load older post: ' + bsOptions.prevPermalink + '</li>');
+				if (bsOptions.goToHomepage) bsHelp.append('<li>Go to the homepage: ' + bsOptions.goToHomepage + '</li>');
+				if (bsOptions.goToTop) bsHelp.append('<li>Go to the top of the page: ' + bsOptions.goToTop + '</li>');
+				if (bsOptions.goToArchives) bsHelp.append('<li>Go to archives: ' + bsOptions.goToArchives + '</li>');
+				if (bsOptions.goToAbout) bsHelp.append('<li>Go to about page: ' + bsOptions.goToAbout + '</li>');
+				if (bsOptions.focusSearch) bsHelp.append('<li>Focus on the search box: ' + bsOptions.focusSearch + '</li>');
+				
+				$('body').append(bsHelp);
 				clickClear();
 			}
 		
 			lastCode = event.keyCode;
 		}
 	
-		// Clear tag or help window
+		// Clear tag or help window by pressing escape
 		if (event.keyCode == '27') {
 			$('.shortcut-display').remove();
 		}
-	
+
+		// Wait until the box is gone before removing the value of the input box
 		if (clearT) {
 			clearT = false;
-			function clearTag() { $('#tag-input').val(''); }
 			window.setTimeout(clearTag,10);
 		}
 
+		// This is the event handler that submits the go-to-tag form
+		$('#goto-tag form').live('submit', function(){
+			window.location = '/tag/' + $('#tag-input').val();
+			return false;
+		});
+		
 	});
 
 });
+
+// We want to clear out the go-to-tag box if you hide it.
+function clearTag() { $('#tag-input').val(''); }
+
+// When a user clicks out of the tag or help box, hide it.
+function clickClear() {
+	if (!clickCleared) {
+		$('*').click(function(e) {
+			if (!$(e.target).parents().hasClass('.shortcut-display') && !$(e.target).hasClass('.shortcut-display')) {
+				$('.shortcut-display').remove();
+				clickCleared = true;
+			}
+		});
+	}
+}
