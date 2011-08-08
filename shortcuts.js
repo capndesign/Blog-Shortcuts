@@ -3,21 +3,61 @@
 * This will eventually be open sourced, once I figure that out.
 */
 
-/***** Configurable *****/
-
-/* Selector for Blog Post */
-
-var blogPostSelector = '.article';
-var nextPost = 'j';
-var prevPost = 'k';
-var goToPost = 'enter';
-
-/***** Not so Configurable *****/
+/***** Please leave these fellows be. *****/
 
 var keyIndex = 0;
 var keyPresses = 0;
 var bsItems, lastCode, activeUrl;
 var clearT = false;
+
+/***** Configure me, please. *****/
+
+var bsOptions = {};
+
+// Provide the CSS selector that is unique to your blog posts.
+bsOptions.blogPostSelector = '.article';
+
+// Keys for next and previous posts
+bsOptions.nextPost = 'j';
+bsOptions.prevPost = 'k';
+
+// The key used to go to the permalink for the actively selected 
+bsOptions.goToPost = 'enter';
+
+// Selector for your active URL
+bsOptions.activeUrl = $($(bsOptions.blogPostSelector).get(keyIndex)).children().children('a.permalink').attr('href');
+
+// Keys for next and previous posts when on permalink pages
+bsOptions.nextPermalink = 'n';
+bsOptions.prevPermalink = 'p';
+
+// Key to go to your homepage
+bsOptions.goToHomepage = 'h';
+
+// The URL of your homepage
+bsOptions.homepageUrl = '/';
+
+// Key to go to your archives
+bsOptions.goToArchives = 'r';
+
+// The URL of your archives
+bsOptions.archivesUrl = '/archives/';
+
+// Key to go to your about page
+bsOptions.goToAbout = 'a';
+
+// The URL of your about page
+bsOptions.aboutUrl = '/about/';
+
+// The selector for your search box
+bsOptions.searchSelector = '#search';
+
+// Key to focus on search
+bsOptions.focusSearch = 's';
+
+// Show help box
+bsOptions.help = '?';
+
 
 /* I borrowed these key codes from jKey
 More infomation on http://oscargodson.com/labs/jkey */
@@ -137,12 +177,11 @@ var keyCodes = {
 	'?':191
 };
 
-
 $(document).ready(function(){
 
 	/***** Not so Configurable *****/
 
-	bsItems = $(blogPostSelector).length;
+	bsItems = $(bsOptions.blogPostSelector).length;
 
 	$('html').keyup(function(event){
 		
@@ -151,65 +190,61 @@ $(document).ready(function(){
 			keyPresses++;
 
 			// Scroll to the next entry
-			if (event.keyCode == keyCodes[nextPost] && !$('body.entry').html()) { 
+			if (event.keyCode == keyCodes[bsOptions.nextPost] && !$('body.entry').html()) { 
 				keyIndex++;
 				if (keyIndex < 0 || keyPresses == 1) keyIndex = 0;
 				if (keyIndex >= bsItems) keyIndex = bsItems - 1;
-				var articlePos = $($(blogPostSelector).get(keyIndex)).offset();
+				var articlePos = $($(bsOptions.blogPostSelector).get(keyIndex)).offset();
 				$(window).scrollTop(articlePos.top - 10);
-				activeUrl = $($(blogPostSelector).get(keyIndex)).children().children('a.permalink').attr('href');
+				activeUrl = $($(bsOptions.blogPostSelector).get(keyIndex)).children().children('a.permalink').attr('href');
 			}
 
 			// Scroll to the previous entry
-			if (event.keyCode == keyCodes[prevPost] && !$('body.entry').html()) {
+			if (event.keyCode == keyCodes[bsOptions.prevPost] && !$('body.entry').html()) {
 
 				keyIndex--;
 				if (keyIndex < 0 || keyPresses == 1) keyIndex = 0;
 				if (keyIndex >= bsItems) keyIndex = bsItems - 1;
-				var articlePos = $($(blogPostSelector).get(keyIndex)).offset();
+				var articlePos = $($(bsOptions.blogPostSelector).get(keyIndex)).offset();
 				$(window).scrollTop(articlePos.top - 10);
-				activeUrl = $($(blogPostSelector).get(keyIndex)).children().children('a.permalink').attr('href');
+				activeUrl = $($(bsOptions.blogPostSelector).get(keyIndex)).children().children('a.permalink').attr('href');
 			}
 
 			// Go to Entry
-			if (event.keyCode == keyCodes[goToPost] && activeUrl != '') {
+			if (event.keyCode == keyCodes[bsOptions.goToPost] && activeUrl != '') {
 				window.location = activeUrl
 			}
 
-			// Load the newer entry on permalink: J or N
-			if ($('body').hasClass('entry') && $('a.right-nav').html() && (event.charCode == '78' || event.charCode == '74')) {
+			// Load the newer entry on permalink
+			if ($('body').hasClass('entry') && $('a.right-nav').html() && event.keyCode == keyCodes[bsOptions.nextPermalink]) {
 				window.location = $('a.right-nav').attr('href');
 			}
-			// Load the older entry on permalink: K or P
-			if ($('body').hasClass('entry') && $('a.left-nav').html() && (event.charCode == '80' || event.charCode == '75')) {
+			// Load the older entry on permalink
+			if ($('body').hasClass('entry') && $('a.left-nav').html() && event.keyCode == keyCodes[bsOptions.prevPermalink]) {
 				window.location = $('a.left-nav').attr('href');
 			}
 
-			// Go to the homepage: H
-			if (event.charCode == '72') {
-				window.location = '/';
-			}
-			// Go to reviews: r
-			if (event.charCode == '114') {
-				window.location = '/reviews';
+			// Go to the homepage
+			if (event.keyCode == keyCodes[bsOptions.goToHomepage]) {
+				window.location = bsOptions.homepageUrl;
 			}
 
-			// Go to archives: A
-			if (event.charCode == '65') {
-				window.location = '/archives';
+			// Go to archives
+			if (event.keyCode == keyCodes[bsOptions.goToArchives]) {
+				window.location = bsOptions.archivesUrl;
 			}
 
-			// Go to about: a
-			if (event.charCode == '97') {
-				window.location = '/about';
+			// Go to about
+			if (event.keyCode == keyCodes[bsOptions.goToAbout]) {
+				window.location = bsOptions.aboutUrl;
 			}
 			// Focus on search: s
-			if (event.charCode == '115') {
-				$('#search').focus();
+			if (event.keyCode == keyCodes[bsOptions.focusSearch]) {
+				$(bsOptions.searchSelector).focus();
 			}
 		
-			if (event.charCode == '116') {
-				if (lastCode == '103') {
+			if (event.keyCode == '84') {
+				if (lastCode == '71') {
 					// Show the tag input window: g+t
 
 					$('body').append('<div id="goto-tag" class="shortcut-display"><form><label for="tag-input">Enter Tag: </label><input type="text" name="tag-input" id="tag-input" /></form></div>');
@@ -226,13 +261,13 @@ $(document).ready(function(){
 				}
 			}
 		
-			if (event.charCode == '63') {
+			if (event.keyCode == keyCodes[bsOptions.help]) {
 				$('body').append('<div id="shortcut-help" class="shortcut-display"><h3>Keyboard Shortcuts!</h3><ul><li>Scroll to the next entry: n or j</li> <li>Scroll to the previous entry: o or k</li> <li>Load the newer entry on permalink: J or N</li> <li>Load the older entry on permalink: K or P</li> <li>Go to the homepage: H</li> <li>Go to reviews: r</li> <li>Go to archives: A</li> <li>Go to about: a</li> <li>Focus on search: s</li> <li>Go to top: t</li> <li>Show the tag input window: g+t</li></ul></div>');
 			
 				clickClear();
 			}
 		
-			lastCode = event.charCode;
+			lastCode = event.keyCode;
 		}
 	
 		// Clear tag or help window
@@ -246,13 +281,6 @@ $(document).ready(function(){
 			window.setTimeout(clearTag,10);
 		}
 
-	});
-
-	$('html').keyup(function(event){
-		// Clear tag or help window for Webkit
-		if (event.keyCode == '27') {
-			$('.shortcut-display').remove();
-		}
 	});
 
 });
