@@ -64,11 +64,15 @@ These are the shortcuts that are included.
 
 Right now, the only place it's in use is on my blog. You can see it at [capndesign.com](http://capndesign.com).
 
+## Known Issues
+
+* Firefox doesn't like the `?` key for some reason. I need to find a workaround
+* It doesn't work in IE 6/7 (maybe 8 and 9 too).
+
 ## TODO
 
 * <strike>Set jQuery selectors via variables</strike>
 * <strike>Set keyboard commands via variables</strike>
 * <strike>Allow character labels instead of character codes</strike>
 * Figure out open-source license
-* Test in IE 7/8, then make it work there
 * Get people to help optimize the JS; it could be better
