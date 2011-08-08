@@ -17,7 +17,9 @@ var bsOptions = {};
 	All of the shortcuts already have keys and other variables set,
 	but you'll have a lot more fun if you make it your own.
 	
-	A note: Don't use 'g'. I've reserved that for go-to commands.
+	A couple notes: 
+	* Don't use 'g'. I've reserved that for go-to commands.
+	* Just comment out any shortcuts you don't need.
 */
 
 // Provide the CSS selector that is unique to your blog posts.
@@ -27,10 +29,11 @@ bsOptions.blogPostSelector = '.article';
 bsOptions.nextPost = 'j';
 bsOptions.prevPost = 'k';
 
-// The key used to go to the permalink for the actively selected
+// The key used to go to the permalink for the actively selected.
 // The permalink URL is configured in the code below. Mine was convoluted
-// and I couldn't figure out a good way to bring it up here.
-bsOptions.goToPost = 'enter';
+// and I couldn't figure out a good way to bring it up here,
+// so this is off by default.
+// bsOptions.goToPost = 'enter';
 
 // Keys for next and previous posts when on permalink pages
 bsOptions.nextPermalink = 'n';
@@ -65,6 +68,7 @@ bsOptions.focusSearch = 's';
 
 // Enable go-to-tag box.
 // I haven't generalized key sequences, so this is hard coded to g+t for now.
+// Don't forget to update the form submit event handler if you're going to use this.
 bsOptions.showTagBox = true;
 
 // Show help box
