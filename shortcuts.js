@@ -1,6 +1,6 @@
 /* 
 * Blog Shortcuts are developed by Matt Jacobs
-* They will eventually be open sourced, once I figure that out.
+* This will eventually be open sourced, once I figure that out.
 */
 
 /***** Configurable *****/
@@ -8,48 +8,171 @@
 /* Selector for Blog Post */
 
 var blogPostSelector = '.article';
-
+var nextPost = 'j';
+var prevPost = 'k';
+var goToPost = 'enter';
 
 /***** Not so Configurable *****/
 
 var keyIndex = 0;
 var keyPresses = 0;
-var items = $(blogPostSelector).length;
-var lastCode = '';
-var activeUrl = '';
+var bsItems, lastCode, activeUrl;
 var clearT = false;
+
+/* I borrowed these key codes from jKey
+More infomation on http://oscargodson.com/labs/jkey */
+
+var keyCodes = { 
+	/* start the a-z keys */
+	'a' : 65,
+	'b' : 66,
+	'c' : 67,
+	'd' : 68,
+	'e' : 69,
+	'f' : 70,
+	'g' : 71,
+	'h' : 72,
+	'i' : 73,
+	'j' : 74,
+	'k' : 75,
+	'l' : 76,
+	'm' : 77,
+	'n' : 78,
+	'o' : 79,
+	'p' : 80,
+	'q' : 81,
+	'r' : 82,
+	's' : 83,
+	't' : 84,
+	'u' : 85,
+	'v' : 86,
+	'w' : 87,
+	'x' : 88,
+	'y' : 89,
+	'z' : 90,
+	/* start number keys */
+	'0' : 48,
+	'1' : 49,
+	'2' : 50,
+	'3' : 51,
+	'4' : 52,
+	'5' : 53,
+	'6' : 54,
+	'7' : 55,
+	'8' : 56,
+	'9' : 57,
+	/* start the f keys */
+	'f1' : 112,
+	'f2' : 113,
+	'f3' : 114,
+	'f4' : 115,
+	'f5' : 116,
+	'f6' : 117,
+	'f7' : 118,
+	'f8' : 119,
+	'f9' : 120,
+	'f10': 121,
+	'f11': 122,
+	'f12': 123,
+	/* start the modifier keys */
+	'shift' : 16,
+	'ctrl' : 17,
+	'control' : 17,
+	'alt' : 18,
+	'option' : 18, //Mac OS key
+	'opt' : 18, //Mac OS key
+	'cmd' : 224, //Mac OS key
+	'command' : 224, //Mac OS key
+	'fn' : 255, //tested on Lenovo ThinkPad
+	'function' : 255, //tested on Lenovo ThinkPad
+	/* Misc. Keys */
+	'backspace' : 8,
+	'osxdelete' : 8, //Mac OS version of backspace
+	'enter' : 13,
+	'return' : 13, //Mac OS version of "enter"
+	'space':32,
+	'spacebar':32,
+	'esc':27,
+	'escape':27,
+	'tab':9,
+	'capslock':20,
+	'capslk':20,
+	'super':91,
+	'windows':91,
+	'insert':45,
+	'delete':46, //NOT THE OS X DELETE KEY!
+	'home':36,
+	'end':35,
+	'pgup':33,
+	'pageup':33,
+	'pgdn':34,
+	'pagedown':34,
+	/* Arrow keys */
+	'left' : 37,
+	'up'   : 38,
+	'right': 39,
+	'down' : 40,
+	/* Special char keys */
+	'`':96,
+	'~':96,
+	'-':45,
+	'_':45,
+	'=':187,
+	'+':187,
+	'[':219,
+	'{':219,
+	']':221,
+	'}':221,
+	'\\':220, //it's actually a \ but there's two to escape the original
+	'|':220,
+	';':59,
+	':':59,
+	"'":222,
+	'"':222,
+	',':188,
+	'<':188,
+	'.':190,
+	'>':190,
+	'/':191,
+	'?':191
+};
+
 
 $(document).ready(function(){
 
-	$('html').keypress(function(event){
+	/***** Not so Configurable *****/
+
+	bsItems = $(blogPostSelector).length;
+
+	$('html').keyup(function(event){
 		
 		// Prevent keypresses from interupting form submissions
 		if (document.activeElement.localName.toLowerCase() != 'input' && document.activeElement.localName.toLowerCase() != 'textarea') {
 			keyPresses++;
 
-			// Scroll to the next entry: n or j
-			if ((event.charCode == '106' || event.charCode == '110') && !$(blogPostSelector).html()) { 
+			// Scroll to the next entry
+			if (event.keyCode == keyCodes[nextPost] && !$('body.entry').html()) { 
 				keyIndex++;
 				if (keyIndex < 0 || keyPresses == 1) keyIndex = 0;
-				if (keyIndex >= items) keyIndex = items - 1;
+				if (keyIndex >= bsItems) keyIndex = bsItems - 1;
 				var articlePos = $($(blogPostSelector).get(keyIndex)).offset();
-				$(window).scrollTop(articlePos.top -10);
+				$(window).scrollTop(articlePos.top - 10);
 				activeUrl = $($(blogPostSelector).get(keyIndex)).children().children('a.permalink').attr('href');
 			}
 
-			// Scroll to the previous entry: p or k
-			if ((event.charCode == '107' || event.charCode == '112') && !$('body.entry').html()) {
+			// Scroll to the previous entry
+			if (event.keyCode == keyCodes[prevPost] && !$('body.entry').html()) {
 
 				keyIndex--;
 				if (keyIndex < 0 || keyPresses == 1) keyIndex = 0;
-				if (keyIndex >= items) keyIndex = items - 1;
+				if (keyIndex >= bsItems) keyIndex = bsItems - 1;
 				var articlePos = $($(blogPostSelector).get(keyIndex)).offset();
-				$(window).scrollTop(articlePos.top -10);
+				$(window).scrollTop(articlePos.top - 10);
 				activeUrl = $($(blogPostSelector).get(keyIndex)).children().children('a.permalink').attr('href');
 			}
 
 			// Go to Entry
-			if (event.keyCode == '13' && activeUrl != '') {
+			if (event.keyCode == keyCodes[goToPost] && activeUrl != '') {
 				window.location = activeUrl
 			}
 
