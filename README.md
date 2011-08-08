@@ -39,9 +39,9 @@ The inline comments should be enough for you to figure it out, but it's worth no
 
 ### Some usage notes
 
-* Don't use 'g'. I've reserved that for go-to commands.
+* Don't use `g`. I've reserved that for go-to commands.
 * As such, the "go to tag" command is hard-coded to `g then t`.
-* The "go to post" command is a bit customized for me. It definitely works, but it's not as automatic as I'd like.
+* You could make the shortcuts the same for navigating between permalinks or through a list of posts. Otherwise, you really shouldn't use the same shortcut twice.
 
 ## Available Shortcuts
 

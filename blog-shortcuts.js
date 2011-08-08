@@ -22,18 +22,27 @@ var bsOptions = {};
 	* Just comment out any shortcuts you don't need.
 */
 
-// Provide the CSS selector that is unique to your blog posts.
+// The CSS selector that is unique to your blog posts.
+// Without this, we can't jump between posts!
 bsOptions.blogPostSelector = '.article';
 
 // Keys for next and previous posts
 bsOptions.nextPost = 'j';
 bsOptions.prevPost = 'k';
 
-// The key used to go to the permalink for the actively selected.
-// The permalink URL is configured in the code below. Mine was convoluted
-// and I couldn't figure out a good way to bring it up here,
-// so this is off by default.
-// bsOptions.goToPost = 'enter';
+// The key used to go to the permalink for the actively selected post.
+bsOptions.goToPost = 'enter';
+
+// The jQuery selector for finding the active link after selecting a new post.
+// Yes, mine is very complicated.
+bsOptions.goToPostUrl = '$($(bsOptions.blogPostSelector).get(keyIndex)).children().children(\'a.permalink\').attr(\'href\')';
+
+// Selectors for your permalink pages
+// The first is a unique identifier for the pages,
+// the following are for next/prev links.
+bsOptions.permalinkSelector = 'body.entry';
+bsOptions.newerPermalink = '$(\'a.right-nav\').attr(\'href\')';
+bsOptions.olderPermalink = '$(\'a.left-nav\').attr(\'href\')';
 
 // Keys for next and previous posts when on permalink pages
 bsOptions.nextPermalink = 'n';
@@ -209,38 +218,38 @@ $(document).ready(function(){
 			keyPresses++;
 
 			// Scroll to the next entry
-			if (event.keyCode == keyCodes[bsOptions.nextPost] && !$('body.entry').html()) { 
+			if (event.keyCode == keyCodes[bsOptions.nextPost] && !$(bsOptions.permalinkSelector).html()) { 
 				keyIndex++;
 				if (keyIndex < 0 || keyPresses == 1) keyIndex = 0;
 				if (keyIndex >= bsItems) keyIndex = bsItems - 1;
 				var articlePos = $($(bsOptions.blogPostSelector).get(keyIndex)).offset();
 				$(window).scrollTop(articlePos.top - 10);
-				activeUrl = $($(bsOptions.blogPostSelector).get(keyIndex)).children().children('a.permalink').attr('href');
+				activeUrl = eval(bsOptions.goToPostUrl);
 			}
 
 			// Scroll to the previous entry
-			if (event.keyCode == keyCodes[bsOptions.prevPost] && !$('body.entry').html()) {
+			if (event.keyCode == keyCodes[bsOptions.prevPost] && !$(bsOptions.permalinkSelector).html()) {
 
 				keyIndex--;
 				if (keyIndex < 0 || keyPresses == 1) keyIndex = 0;
 				if (keyIndex >= bsItems) keyIndex = bsItems - 1;
 				var articlePos = $($(bsOptions.blogPostSelector).get(keyIndex)).offset();
 				$(window).scrollTop(articlePos.top - 10);
-				activeUrl = $($(bsOptions.blogPostSelector).get(keyIndex)).children().children('a.permalink').attr('href');
+				activeUrl = eval(bsOptions.goToPostUrl);
 			}
 
 			// Go to Entry
-			if (event.keyCode == keyCodes[bsOptions.goToPost] && activeUrl != '') {
+			if (event.keyCode == keyCodes[bsOptions.goToPost] && activeUrl) {
 				window.location = activeUrl;
 			}
 
 			// Load the newer entry on permalink
-			if ($('body').hasClass('entry') && $('a.right-nav').html() && event.keyCode == keyCodes[bsOptions.nextPermalink]) {
-				window.location = $('a.right-nav').attr('href');
+			if ($(bsOptions.permalinkSelector).html() && eval(bsOptions.newerPermalink) && event.keyCode == keyCodes[bsOptions.nextPermalink]) {
+				window.location = eval(bsOptions.newerPermalink);
 			}
 			// Load the older entry on permalink
-			if ($('body').hasClass('entry') && $('a.left-nav').html() && event.keyCode == keyCodes[bsOptions.prevPermalink]) {
-				window.location = $('a.left-nav').attr('href');
+			if ($(bsOptions.permalinkSelector).html() && eval(bsOptions.olderPermalink) && event.keyCode == keyCodes[bsOptions.prevPermalink]) {
+				window.location = eval(bsOptions.olderPermalink);
 			}
 
 			// Go to the homepage
