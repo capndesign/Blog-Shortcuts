@@ -286,6 +286,7 @@ $(document).ready(function(){
 				if (bsOptions.goToArchives) bsHelp.append('<li>Go to archives: ' + bsOptions.goToArchives + '</li>');
 				if (bsOptions.goToAbout) bsHelp.append('<li>Go to about page: ' + bsOptions.goToAbout + '</li>');
 				if (bsOptions.focusSearch) bsHelp.append('<li>Focus on the search box: ' + bsOptions.focusSearch + '</li>');
+				if (bsOptions.showTagBox) bsHelp.append('<li>Show the "Go to tag" box: g then t</li>');
 				
 				$('body').append(bsHelp);
 				clickClear();
